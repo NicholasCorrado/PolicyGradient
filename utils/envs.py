@@ -32,3 +32,16 @@ def make_env_discrete(env_id, idx, capture_video=False, run_name="run"):
         return env
 
     return thunk
+
+
+def make_env(env_id, idx, capture_video=False, run_name="run", gamma=0.99):
+    # Create a temporary environment to check action space
+    temp_env = gym.make(env_id)
+    is_discrete_action = isinstance(temp_env.action_space, gym.spaces.Discrete)
+    temp_env.close()
+
+    # Choose the appropriate environment factory
+    if is_discrete_action:
+        return make_env_discrete(env_id, idx, capture_video, run_name)
+    else:
+        return make_env_continuous(env_id, idx, capture_video, run_name, gamma)
