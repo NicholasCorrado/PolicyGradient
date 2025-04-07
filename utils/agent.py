@@ -60,7 +60,7 @@ class DiscreteActionAgent(BaseAgent):
     def get_action_and_value(self, x, action=None):
         logits = self.actor(x)
         probs = Categorical(logits=logits)
-
+        # print(probs.probs)
         if action is None:
             action = probs.sample()
 
@@ -70,6 +70,7 @@ class DiscreteActionAgent(BaseAgent):
         logits = self.actor(x)
         if sample:
             probs = Categorical(logits=logits)
+            # print(probs.probs)
             return probs.sample()
         else:
             return torch.argmax(logits, dim=1)
@@ -83,10 +84,18 @@ class DiscreteActionAgent(BaseAgent):
 
         return action, probs.log_prob(action), probs.entropy(), logits, None
 
+    def get_action_distribution(self, x, action=None):
+        logits = self.actor(x)
+        probs = Categorical(logits=logits)
+        return probs
+
     def get_logprob(self, x, action):
         logits = self.actor(x)
         probs = Categorical(logits=logits)
         return probs.log_prob(action)
+
+    def get_actor_parameters(self):
+        return self.actor.parameters()
 
 
 class ContinuousActionAgent(BaseAgent):
@@ -137,6 +146,9 @@ class ContinuousActionAgent(BaseAgent):
         action_std = torch.exp(action_logstd)
         probs = Normal(action_mean, action_std)
         return probs.log_prob(action).sum(1)
+
+    def get_actor_parameters(self):
+        return list(self.actor_mean.parameters()) + list(self.actor_logstd)
 
 
 class DiscreteObsDiscreteActionAgent(DiscreteActionAgent):

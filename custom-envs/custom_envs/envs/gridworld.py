@@ -5,7 +5,7 @@ import numpy as np
 
 
 class GridWorldEnv(gym.Env):
-    def __init__(self, shape=(5,5), rewards=(-0.01, 0.5, 1)):
+    def __init__(self, shape=(5,5), rewards=(-0.01, -0.01, 0)):
         super().__init__()
 
         self.shape = np.array(shape)
@@ -23,7 +23,7 @@ class GridWorldEnv(gym.Env):
         self.opt_reward = rewards[2]
 
         self.terminals = np.zeros(shape=self.shape, dtype=bool)
-        self.terminals[self.rewards > 0] = True
+        self.terminals[self.rewards >= 0] = True
         # self.terminals[self.rewards > 0.02] = True
 
         print(self.rewards)

@@ -1,6 +1,9 @@
 import gymnasium as gym
-from gymnasium.wrappers import NormalizeObservation, NormalizeReward
+# from gymnasium.wrappers import NormalizeObservation, NormalizeReward
 import numpy as np
+
+from wrappers import NormalizeObservation, NormalizeReward
+
 
 def make_env_continuous(env_id, idx, capture_video=False, run_name="run", gamma=0.99):
     def thunk():
